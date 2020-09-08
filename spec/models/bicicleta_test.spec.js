@@ -1,7 +1,7 @@
 var Bicicleta = require('../../models/bicicleta');
 
 //Se ejecuta antes de cada funcion
-beforeEach(() => {Bicicleta.allBicis = []; });
+beforeEach(() => { Bicicleta.allBicis = []; });
 
 describe('Bicicleta.allBicis', () => {
     it('comienza vacía', () => {
@@ -18,8 +18,8 @@ describe('Bicicleta.add', () => {
 
         expect(Bicicleta.allBicis.length).toBe(1);
         expect(Bicicleta.allBicis[0]).toBe(a);
-    })
-})
+    });
+});
 
 describe('Bicicleta.findById', () => {
     it('debe devolver la bici con id 1', () => {
