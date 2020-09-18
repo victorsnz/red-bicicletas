@@ -41,8 +41,10 @@ describe('Testing Usuarios', function(){
             const bicicleta = Bicicleta({ code: 1, color: "Rojo", modelo: "Urbana" });
             bicicleta.save();
             console.log('bicicleta ' + bicicleta);
+            
             var hoy = new Date();
             var manana = new Date();
+            
             manana.setDate(hoy.getDate() + 1);
             usuario.reservar(bicicleta.id, hoy, manana, (err, reserva) => {
                 Reserva.find({}).populate('bicicleta').populate('usuario').exec(function(err, reservas){
