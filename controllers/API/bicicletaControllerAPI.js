@@ -1,39 +1,50 @@
 var Bicicleta = require('../../models/bicicleta');
 
 exports.bicicleta_list = function(req,res){
-    // res.status(200).json({
-    //     bicicletas: Bicicleta.allBicis
-    // });
     Bicicleta.allBicis(function (err, bicis) {
       res.status(200).json({ Bicicletas: bicis });
     });
 }
 
 exports.bicicleta_create = function(req, res){
-    var bici = new Bicicleta(req.body.id, req.body.color, req.body.modelo);
-    bici.ubicacion = [req.body.lat, req.body.lng];
-    
-    Bicicleta.add(bici);
-
-    res.status(200).json({
-        bicicleta: bici
+    var bici = new Bicicleta ({color : req.body.color, modelo : req.body.modelo});
+    bici.save(function(err){
+        res.status(200).json(bici);
     });
-}
+};
 
 exports.bicicleta_update = function (req, res) {
-    var bici = Bicicleta.findById(req.body.id);
-    
-    bici.id = req.body.id;
-    bici.color = req.body.color;
-    bici.modelo = req.body.modelo;
-    bici.ubicacion = [req.body.lat, req.body.lng];
 
-    res.status(200).json({
-        bicicleta: bici
+    const bici = req.body;
+    var id = bici._id;
+    var biciCode = bici.code;
+    var biciColor = bici.color;
+    var biciModelo = bici.modelo;
+    var biciUbicacion = [bici.lat, bici.lng];
+
+    Bicicleta.findById(id, function(err, bicicleta){
+        if(err) console.log(err);
+
+        Bicicleta.updateOne({ _id: bicicleta._id}, {$set: {code: biciCode, color: biciColor, modelo: biciModelo, ubicacion: biciUbicacion}},{new: true},(error,model) => {
+            if(error){
+                console.log(error);
+            }else{
+                console.log(model);
+            }
+            res.status(200).json(model);
+        });
     });
-}
+};
 
 exports.bicicleta_delete = function(req, res){
-    Bicicleta.removeById(req.body.id);
-    res.status(204).send();
-}
+    var id = req.body._id;
+    Bicicleta.findById(id, function (err, bicicleta) {
+      if (err) console.log(err);
+
+      Bicicleta.deleteOne({ _id: bicicleta._id }, (error, model) => {
+        if (error) console.log(error); 
+
+        res.status(204).json(model);
+      });
+    });
+};

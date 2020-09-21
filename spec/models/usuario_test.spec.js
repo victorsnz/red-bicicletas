@@ -38,7 +38,7 @@ describe('Testing Usuarios', function(){
             const usuario = new Usuario({ nombre: 'Andres' });
             usuario.save();
             console.log("usuario " + usuario);
-            const bicicleta = Bicicleta({ code: 1, color: "Rojo", modelo: "Urbana" });
+            const bicicleta = new Bicicleta({ code: 1, color: "Rojo", modelo: "Urbana" });
             bicicleta.save();
             console.log('bicicleta ' + bicicleta);
             
@@ -51,7 +51,7 @@ describe('Testing Usuarios', function(){
                     console.log(reservas[0]);
                     console.log(reservas[0].usuario);
                     expect(reservas.length).toBe(1);
-                    expect(reservas[0].diasDeReserva()).toBe(1);//cambiar a 2
+                    expect(reservas[0].diasDeReserva()).toBe(2);//2 en el original
                     expect(reservas[0].bicicleta.code).toBe(1);
                     expect(reservas[0].usuario.nombre).toBe(usuario.nombre);
 

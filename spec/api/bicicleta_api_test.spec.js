@@ -3,6 +3,8 @@ var Bicicleta = require("../../models/bicicleta");
 var request = require("request");
 var server = require("../../bin/www");
 
+var base_url = 'http://localhost:3000/api/bicicletas';
+
 describe("Testing Api Bicicletas ", function () {
   beforeEach(function (done) {
     var mongoDB = "mongodb://localhost/red_bicicletas";
@@ -31,17 +33,15 @@ describe("Testing Api Bicicletas ", function () {
       Bicicleta.allBicis((err, bicis) => {
         expect(bicis.length).toBe(0);
       });
-      var aBici = new Bicicleta({ code: 1, color: "verde", modelo: "urbana" });
+      var aBici = new Bicicleta({ code: 1, color: "Verde", modelo: "Urbana" });
       Bicicleta.add(aBici, (err, newBici) => {
         if (err) console.log(err);
       });
-      request.get(
-        "http://localhost:3000/api/bicicletas",
+      request.get(base_url,
         (error, response, body) => {
           expect(response.statusCode).toBe(200);
           done();
-        }
-      );
+        });
     });
   });
 
@@ -49,11 +49,11 @@ describe("Testing Api Bicicletas ", function () {
     it("Status 200", (done) => {
       var headers = { "content-type": "application/json" };
       var aBici =
-        '{"code":1, "color":"morado", "modelo":"urbano", "lat":"-54.3", "lng":"-10.4"}';
+        '{"code":1, "color":"Morado", "modelo":"Urbano", "lat":"-54.3", "lng":"-10.4"}';
       request.post(
         {
           headers: headers,
-          url: "http://localhost:3000/api/bicicletas/create",
+          url: base_url + "/create",
           body: aBici,
         },
         function (error, response, body) {
@@ -63,14 +63,13 @@ describe("Testing Api Bicicletas ", function () {
             expect(bicicleta.code).toBe(1);
             done();
           });
-        }
-      );
+        });
     });
   });
 
   describe("UPDATE Bicicletas /update", () => {
     it("Actualizar una bicicleta", (done) => {
-      var aBici = new Bicicleta({ code: 1, color: "verde", modelo: "urbana" });
+      var aBici = new Bicicleta({ code: 1, color: "Verde", modelo: "Urbana" });
       aBici.save((err, bici) => {
         if (err) console.log(err);
         Bicicleta.findOne({ _id: bici._id }, "code color  modelo").exec(
@@ -79,13 +78,13 @@ describe("Testing Api Bicicletas ", function () {
             console.log(bicicleta);
             var headers = { "content-type": "application/json" };
             var abiciUpdate =
-              '{ "code":1,"color":"rojo","modelo":"urbano","lat": "-54","lng": "-30" }';
+              '{ "code":1,"color":"Rojo","modelo":"Urbano","lat": "-54","lng": "-30" }';
             console.log(bicicleta);
             request.post(
               {
                 headers: headers,
-                url: "http://localhost:3000/api/bicicletas/update",
-                body: abiciUpdate,
+                url: base_url + "/update",
+                body: abiciUpdate
               },
               function (error, response, body) {
                 expect(response.statusCode).toBe(200);

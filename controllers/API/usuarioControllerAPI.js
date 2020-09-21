@@ -5,7 +5,7 @@ exports.usuario_list = function( req, res ){
         res.status(200).json({
             usuarios : usuarios
         });
-    });x
+    });
 };
 
 exports.usuario_create = function( req, res) {
@@ -27,7 +27,7 @@ exports.usuario_reservar = function( req,res ) {
     });
 };
 
-exports.usuario_actualizar = function( req,res ) {
+exports.usuario_update = function( req,res ) {
     
     const user = req.body;
     var id = user._id;
@@ -47,6 +47,19 @@ exports.usuario_actualizar = function( req,res ) {
             }
     
             res.status(200).json(model);
+        });
+    });
+};
+
+exports.usuario_delete = function (req, res) {
+    var id = req.body._id;
+    Usuario.findById(id, function (err, usuario) {
+        if (err) console.log(err);
+
+        Usuario.deleteOne({ _id: usuario._id }, (error, model) => {
+        if (error) console.log(error);
+
+        res.status(204).json(model);
         });
     });
 };

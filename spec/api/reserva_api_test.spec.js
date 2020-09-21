@@ -42,9 +42,9 @@ describe("Testing Api Reservas ", function () {
       let usuario = new Usuario({ nombre: "Andres Bautista" });
       usuario.save();
       let bicicleta = new Bicicleta({
-        code: 1,
-        color: "Rojo",
-        modelo: "Urbano",
+        "code": 1,
+        "color": "Rojo",
+        "modelo": "Urbano",
       });
       bicicleta.save();
       const headers = { "content-type": "application/json" };
