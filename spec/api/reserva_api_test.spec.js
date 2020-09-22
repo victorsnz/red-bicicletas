@@ -10,13 +10,11 @@ var base_url = "http://localhost:3000/API/reservas";
 describe("Testing Api Reservas ", function () {
   beforeEach(function (done) {
     var mongoDB = "mongodb://localhost/red_bicicletas";
-    mongoose.connect(mongoDB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
+    // mongoose.connect(mongoDB, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+    //const db = mongoose.connection;
+    // El código anterior arroja un error de multiples conexiones.
 
-    const db = mongoose.connection;
+    const db = mongoose.createConnection(mongoDB); //Esta línea permite multiples conexiones MongoDB.
     db.on("error", console.error.bind(console, "connection error"));
     db.once("open", function () {
       console.log("Conectado a la base de datos");

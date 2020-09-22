@@ -8,12 +8,11 @@ var base_url = 'http://localhost:3000/api/bicicletas';
 describe("Testing Api Bicicletas ", function () {
   beforeEach(function (done) {
     var mongoDB = "mongodb://localhost/red_bicicletas";
-    mongoose.connect(mongoDB, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-    });
-    const db = mongoose.connection;
+    // mongoose.connect(mongoDB, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+    //const db = mongoose.connection;
+    // El código anterior arroja un error de multiples conexiones.
+
+    const db = mongoose.createConnection(mongoDB); //Esta línea permite multiples conexiones MongoDB.
     db.on("error", console.error.bind(console, "connection error"));
     db.once("open", function () {
       console.log("Conectado a la base de datos");
@@ -29,7 +28,7 @@ describe("Testing Api Bicicletas ", function () {
   });
 
   describe("GET Bicicletas /", () => {
-    it("Status 200", (done) => {
+    it("Status 200", () => {
       Bicicleta.allBicis((err, bicis) => {
         expect(bicis.length).toBe(0);
       });
@@ -40,7 +39,7 @@ describe("Testing Api Bicicletas ", function () {
       request.get(base_url,
         (error, response, body) => {
           expect(response.statusCode).toBe(200);
-          done();
+          //done();
         });
     });
   });
@@ -49,14 +48,13 @@ describe("Testing Api Bicicletas ", function () {
     it("Status 200", (done) => {
       var headers = { "content-type": "application/json" };
       var aBici =
-        '{"code":1, "color":"Morado", "modelo":"Urbano", "lat":"-54.3", "lng":"-10.4"}';
+        '{"code": 1, "color":"Morado", "modelo":"Urbano", "lat":"-54.3", "lng":"-10.4"}';
       request.post(
         {
           headers: headers,
           url: base_url + "/create",
           body: aBici,
-        },
-        function (error, response, body) {
+        }, (error, response, body) => {
           expect(response.statusCode).toBe(200);
           Bicicleta.findByCode(1, (err, bicicleta) => {
             if (err) console.log(err);
@@ -78,7 +76,7 @@ describe("Testing Api Bicicletas ", function () {
             console.log(bicicleta);
             var headers = { "content-type": "application/json" };
             var abiciUpdate =
-              '{ "code":1,"color":"Rojo","modelo":"Urbano","lat": "-54","lng": "-30" }';
+              '{ "code": 1,"color":"Rojo","modelo":"Urbano","lat": "-54","lng": "-30" }';
             console.log(bicicleta);
             request.post(
               {
@@ -93,10 +91,31 @@ describe("Testing Api Bicicletas ", function () {
                   expect(bicicleta.code).toBe(1);
                   done();
                 });
-              }
-            );
-          }
-        );
+              });
+          });
+      });
+    });
+  });
+
+  describe("POST DELETE /delete", () => {
+    it("Status 204", (done) => {
+      aBici = new Bicicleta({ code: 12, color: "Verde", modelo: "Urbana" });
+
+      Bicicleta.add(aBici, (err, newBici) => {
+        if (err) console.log(err);
+        console.log(newBici);
+        var headers = { "content-type": "application/json" };
+        var aBici = '{"code": 12}';
+        request.post(
+          {
+            headers: headers,
+            url: base_url + "/delete",
+            body: aBici
+          },
+          function (error, response, body) {
+            expect(response.statusCode).toBe(204);
+            done();
+          });
       });
     });
   });

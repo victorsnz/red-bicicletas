@@ -1,21 +1,19 @@
-var mongoose = require = require('mongoose');
+var mongoose = require('mongoose');
 var Bicicleta = require('../../models/bicicleta');
 
 describe('Testing Bicicletas', function(){
     beforeEach(function(done){
-        var mongoDB = 'mongodb://localhost/testdb';
-        mongoose.connect(mongoDB, {
-          useNewUrlParser: true,
-          useCreateIndex: true,
-          useUnifiedTopology: true,
-        });
+      var mongoDB = "mongodb://localhost/testdb";
+      // mongoose.connect(mongoDB, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+      //const db = mongoose.connection;
+      // El código anterior arroja un error de multiples conexiones.
 
-        const db = mongoose.connection;
-        db.on('error', console.error.bind(console, 'connection error'));
-        db.once('open', function(){
-            console.log('We are connected to test database');
-            done();
-        });
+      const db = mongoose.createConnection(mongoDB); //Esta línea permite multiples conexiones MongoDB.
+      db.on("error", console.error.bind(console, "connection error"));
+      db.once("open", function () {
+        console.log("We are connected to test database");
+        done();
+      });
     });
 
     afterEach(function(done){
@@ -27,7 +25,7 @@ describe('Testing Bicicletas', function(){
 
     describe('Bicicleta.createInstance', () => {
         it('crea una instancia de Bicicleta', () => {
-            var bici = Bicicleta.CreateInstance(1, "Verde", "Urbana", [
+            var bici = Bicicleta.createInstance(1, "Verde", "Urbana", [
             -27.4689004,
             -58.8312304,
             ]);

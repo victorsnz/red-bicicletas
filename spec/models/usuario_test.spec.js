@@ -5,19 +5,18 @@ var Reserva = require('../../models/reserva');
 
 describe('Testing Usuarios', function(){
     beforeEach(function(done){
-        var mongoDB = 'mongodb://localhost/testdb';
-        mongoose.connect(mongoDB, {
-          useNewUrlParser: true,
-          useCreateIndex: true,
-          useUnifiedTopology: true,
-        });
-        const db = mongoose.connection;
-        db.on('error', console.error.bind(console, 'connection error'));
-        db.once('open', function(){
-            console.log('Connected to database');
+      var mongoDB = "mongodb://localhost/testdb";
+      // mongoose.connect(mongoDB, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+      //const db = mongoose.connection;
+      // El código anterior arroja un error de multiples conexiones.
 
-            done();
-        });
+      const db = mongoose.createConnection(mongoDB); //Esta línea permite multiples conexiones MongoDB.
+      db.on("error", console.error.bind(console, "connection error"));
+      db.once("open", function () {
+        console.log("Connected to database");
+
+        done();
+      });
     });
 
     afterEach(function(done){
@@ -38,9 +37,14 @@ describe('Testing Usuarios', function(){
             const usuario = new Usuario({ nombre: 'Andres' });
             usuario.save();
             console.log("usuario " + usuario);
-            const bicicleta = new Bicicleta({ code: 1, color: "Rojo", modelo: "Urbana" });
+            const bicicleta = new Bicicleta({
+              code: 1,
+              color: "Rojo",
+              modelo: "Urbana",
+              ubicacion: [-27.4689004, -58.8312304]
+            });
             bicicleta.save();
-            console.log('bicicleta ' + bicicleta);
+            //console.log('bicicleta ' + bicicleta);
             
             var hoy = new Date();
             var manana = new Date();

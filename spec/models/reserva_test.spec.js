@@ -5,18 +5,17 @@ var Usuario = require("../../models/usuario");
 
 describe('Testing Reservas', function(){
     beforeEach(function(done){
-        var mongoDB = "mongodb://localhost/testdb";
-        mongoose.connect(mongoDB, {
-          useNewUrlParser: true,
-          useCreateIndex: true,
-          useUnifiedTopology: true,
-        });
-        const db = mongoose.connection;
-        db.on('error', console.error.bind(console, 'connection error'));
-        db.once('open', function(){
-            console.log('Connected to database');
-            done();
-        });
+      var mongoDB = "mongodb://localhost/testdb";
+      // mongoose.connect(mongoDB, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+      //const db = mongoose.connection;
+      // El código anterior arroja un error de multiples conexiones.
+
+      const db = mongoose.createConnection(mongoDB); //Esta línea permite multiples conexiones MongoDB.
+      db.on("error", console.error.bind(console, "connection error"));
+      db.once("open", function () {
+        console.log("Connected to database");
+        done();
+      });
     });
 
     afterEach(function (done) {
