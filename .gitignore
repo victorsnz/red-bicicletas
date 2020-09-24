@@ -24,6 +24,9 @@ dist/
 # JetBrains IDE
 .idea/
 
+#VS Code editor
+.vscode/
+
 # Unit test reports
 TEST*.xml
 
@@ -45,3 +48,5 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+
