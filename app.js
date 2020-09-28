@@ -10,11 +10,12 @@ const Usuario = require('./models/usuario');
 const Token = require('./models/token');
 
 var indexRouter = require('./routes/index');
+
 var usuariosRouter = require('./routes/usuarios');
+var usuariosAPIRouter = require('./routes/API/usuarios');
 var tokenRouter = require('./routes/token');
 var bicicletasRouter = require('./routes/bicicletas');
 var bicicletasAPIRouter = require("./routes/API/bicicletas");
-var usuariosAPIRouter = require('./routes/API/usuarios');
 var reservasApiRouter = require("./routes/API/reservas");
 
 const store = new session.MemoryStore;
@@ -57,7 +58,7 @@ app.get('/login', function(req,res, next){
 app.post('/login', function(req, res){
   passport.authenticate('local', function(err, usuario,info) {
     if(err) return next(err);
-    if(!usaurio) return res.render('session/login', {info});
+    if(!usuario) return res.render('session/login', {info});
     req.logIn(usuario, function(err){
       if (err) return next(err);
       return res.redirect('/');
@@ -117,11 +118,11 @@ app.post('/resetPassword', function (req, res) {
 });
 
 app.use('/', indexRouter);
-app.use('/usuarios', usuariosRouter);
 app.use('/token', tokenRouter);
+app.use('/usuarios', usuariosRouter);
+app.use('/API/usuarios', usuariosAPIRouter);
 app.use('/bicicletas', bicicletasRouter);
 app.use('/API/bicicletas', bicicletasAPIRouter);
-app.use('/API/usuarios', usuariosAPIRouter);
 app.use('/API/reservas', reservasApiRouter);
 
 // catch 404 and forward to error handler

@@ -90,7 +90,7 @@ usuarioSchema.methods.enviar_email_bienvenida = function(cb){
     token.save(function(err){
         if(err) {return console.log(err.message);}
 
-        const mailOption = {
+        const mailOptions = {
             from: 'no.reply@redbicicletas.com',
             to: email.destination,
             subject: 'Verificacion de cuenta',

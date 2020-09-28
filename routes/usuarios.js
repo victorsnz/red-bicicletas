@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const usuariosController = require('../controllers/usuarios');
+var usuariosController = require('../controllers/usuario');
 
 /* GET users listing. */
-router.get('/', usuariosController);
+//router.get('/', usuariosController);
 router.post('/create', usuariosController.create);
 router.get('/create', usuariosController.create_get);
 router.post('/:id/update', usuariosController.update);

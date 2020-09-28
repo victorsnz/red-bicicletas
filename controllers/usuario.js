@@ -16,7 +16,7 @@ module.exports = {
         Usuario.findByIdAndUpdate(req.params.id, update_values, function(err, usuario){
             if(err){
                 console.log(err);
-                res.render('usuario/update', {errors: err.errors, usuario: new Usuario({nombre: req.body.nombre, meail: req.body.email})});
+                res.render('usuarios/update', {errors: err.errors, usuario: new Usuario({nombre: req.body.nombre, email: req.body.email})});
             }else{
                 res.redirect('/usuarios');
                 return;
@@ -32,11 +32,17 @@ module.exports = {
             return; 
         }
 
-        Usuario.create({nombre: req.body.nombre, email: req.body.email, password: req.body.password}){
+        Usuario.create({nombre: req.body.nombre, email: req.body.email, password: req.body.password}, function(err, nuevoUsuario){
             if (err){
-                res.render('usuarios/create', {errors: err.errors, usuario: new Usuario({})})
+                res.render("usuarios/create", {
+                  errors: err.errors,
+                  usuario: new Usuario({
+                    nombre: req.body.nombre,
+                    email: req.body.email,
+                  }),
+                });
             }else{
-                nuevoUsaurio.enviar_email_bienvenida();
+                nuevoUsuario.enviar_email_bienvenida();
                 res.redirect('/usuarios');
             }
         });
