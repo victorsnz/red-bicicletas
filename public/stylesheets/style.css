@@ -6,3 +6,7 @@ a {
   height: 400px;
 }
 
+body {
+  padding: 50px;
+  padding-top: 5rem;
+}

@@ -6,6 +6,9 @@ var logger = require('morgan');
 const passport = require('./config/passport');
 const session = require('express-session');
 
+const Usuario = require('./models/usuario');
+const Token = require('./models/token');
+
 var indexRouter = require('./routes/index');
 var usuariosRouter = require('./routes/usuarios');
 var tokenRouter = require('./routes/token');
@@ -46,6 +49,72 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/login', function(req,res, next){
+  res.render('session/login');
+});
+
+app.post('/login', function(req, res){
+  passport.authenticate('local', function(err, usuario,info) {
+    if(err) return next(err);
+    if(!usaurio) return res.render('session/login', {info});
+    req.logIn(usuario, function(err){
+      if (err) return next(err);
+      return res.redirect('/');
+    });    
+  })(req, res, next);
+});
+
+app.get('logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+app.get('/forgotPassword', function(req,res){
+  res.render('session/forgotPassword');
+});
+
+app.post('/forgotPassword', function(req,res){
+  Usuario.findOne({email: req.body.email}, function(err, usuario){
+    if(!usuario) return res.render('session/forgotPassword', {info: {message: 'No existe el email para un usuario existente.'}});
+
+    usuario.resetPassword(function(err){
+      if(err) return next(err);
+      console.log('session/forgotPasswordMessage');
+    });
+
+    res.render('session/forgotPasswordMessage');
+  });
+});
+
+app.get('/resetPassword/:token', function(req, res, next){
+  Token.findOne({token: req.params.token, function (err, token) {
+    if(!token) return res.status(400).send({type: 'not-verified', msg: 'No existe un usuario asociado al token. Verifique que su token no haya expirado.'});
+
+    Usuario.findById(token._userId, function (err, usuario) {
+      if(!usuario) return res.status(400).send({msg: 'No existe un usuario asociado al token.'});
+      res.render('session/resetPassword', {errors: {}, usuario: usuario});
+    });
+  }});
+});
+
+app.post('/resetPassword', function (req, res) {
+  if(req.body.password != req.body.confirm_password){
+    res.render('session/resetPassword', {errors: {confirm_password:{message: 'Novcoincide con el password ingresado'}},
+    usuario: new Usuario({email: req.body.email})});
+    return;
+  }
+  Usuario.findOne({email: req.body.email}, function(err, usuario){
+    usuario.password = req.body.password;
+    usuario.save(function(err){
+      if(err){
+        res.render('session/resetPassword', {errors, usuario: new Usuario({email: req.body.email})});
+      } else {
+        res.redirect('/login');
+      }
+    });
+  });
+});
 
 app.use('/', indexRouter);
 app.use('/usuarios', usuariosRouter);
