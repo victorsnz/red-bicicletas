@@ -121,7 +121,7 @@ app.use('/', indexRouter);
 app.use('/token', tokenRouter);
 app.use('/usuarios', usuariosRouter);
 app.use('/API/usuarios', usuariosAPIRouter);
-app.use('/bicicletas', bicicletasRouter);
+app.use('/bicicletas', loggedIn, bicicletasRouter);
 app.use('/API/bicicletas', bicicletasAPIRouter);
 app.use('/API/reservas', reservasApiRouter);
 
@@ -141,5 +141,13 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+function loggedIn(req, res, next){
+  if(req.user){
+    next();
+  }else{
+    console.log('usuario sin loguearse');
+    res.redirect('/login');
+  }
+};
 
 module.exports = app;
