@@ -3,7 +3,7 @@ var router = express.Router();
 var usuariosController = require('../controllers/usuario');
 
 /* GET users listing. */
-//router.get('/', usuariosController);
+router.get('/', usuariosController.list);
 router.post('/create', usuariosController.create);
 router.get('/create', usuariosController.create_get);
 router.post('/:id/update', usuariosController.update);

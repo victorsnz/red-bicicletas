@@ -92,7 +92,7 @@ usuarioSchema.methods.enviar_email_bienvenida = function(cb){
 
         const mailOptions = {
             from: 'no.reply@redbicicletas.com',
-            to: email.destination,
+            to: email_destination,
             subject: 'Verificacion de cuenta',
             text: 'Hola, \n\n' + 'Por favor, para verificar su cuenta haga click en este link: \n' + 'http://localhost:3000' + '\/token/confirmation\/' + token.token + '.\n'
         };

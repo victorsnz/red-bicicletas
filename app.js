@@ -63,7 +63,7 @@ app.get('/login', function(req,res, next){
   res.render('session/login');
 });
 
-app.post('/login', function(req, res){
+app.post('/login', function(req, res, next){
   passport.authenticate('local', function(err, usuario,info) {
     if(err) return next(err);
     if(!usuario) return res.render('session/login', {info});
