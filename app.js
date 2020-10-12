@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -38,7 +39,12 @@ app.use(session({
 var mongoose = require('mongoose');
 //const token  = require('morgan');
 
-var mongoDB = 'mongodb://localhost/red_bicicletas';
+// Si estoy en el ambiente de desarrollo, usar:
+//var mongoDB = 'mongodb://localhost/red_bicicletas';
+
+// Sino, usar: 
+var mongoDB = process.env.MONGO_URI;
+
 mongoose.connect(mongoDB, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
 mongoose.Promise = global.Promise;
@@ -74,7 +80,7 @@ app.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
-app.get('logout', function(req, res){
+app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
