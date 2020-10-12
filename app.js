@@ -141,6 +141,11 @@ app.use('/API/usuarios', usuariosAPIRouter);
 app.use('/API/bicicletas', validarUsuario, bicicletasAPIRouter);
 app.use('/API/reservas', reservasApiRouter);
 
+app.use('/privacy_policy', function (req, res) {
+  res.sendFile('oublic/policy_pivacy.html');
+  
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
