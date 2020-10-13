@@ -20,7 +20,7 @@ bicicletaSchema.statics.createInstance = function(code, color, modelo, ubicacion
 };
 
 bicicletaSchema.methods.toString = function() {
-    return 'id: ' + this.id + '| color: ' + this.color;
+    return 'id: ' + this.code + '| color: ' + this.color;
 };
 
 bicicletaSchema.statics.allBicis = function(cb){

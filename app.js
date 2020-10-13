@@ -85,8 +85,12 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.get('/forgotPassword', function(req,res){
-  res.render('session/forgotPassword');
+app.get('/forgotPasswordMessage', function(req,res){
+  res.render('session/forgotPasswordMessage');
+});
+
+app.get('/forgotPassword', function(req, res) {
+  res.render('session/forgotPassword')  
 });
 
 app.post('/forgotPassword', function(req,res){
@@ -115,7 +119,7 @@ app.get('/resetPassword/:token', function(req, res, next){
 
 app.post('/resetPassword', function (req, res) {
   if(req.body.password != req.body.confirm_password){
-    res.render('session/resetPassword', {errors: {confirm_password:{message: 'Novcoincide con el password ingresado'}},
+    res.render('session/resetPassword', {errors: {confirm_password:{message: 'No coincide con el password ingresado'}},
     usuario: new Usuario({email: req.body.email})});
     return;
   }
@@ -133,7 +137,7 @@ app.post('/resetPassword', function (req, res) {
 
 app.use('/', indexRouter);
 app.use('/bicicletas', loggedIn, bicicletasRouter);
-app.use('/usuarios', usuariosRouter);
+app.use('/usuarios', loggedIn, usuariosRouter);
 app.use('/token', tokenRouter);
 
 app.use('/API/auth', authAPIRouter);

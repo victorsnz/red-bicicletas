@@ -15,25 +15,33 @@ exports.bicicleta_create = function(req, res){
 
 exports.bicicleta_update = function (req, res) {
 
-    const bici = {
-      _id: req.body._id,
-      code: req.body.code,
-      color: req.body.color,
-      modelo: req.body.modelo,
-      ubicacion: [req.body.lat, req.body.lng],
-    };
+    // const bici = {
+    //   _id: req.body._id,
+    //   code: req.body.code,
+    //   color: req.body.color,
+    //   modelo: req.body.modelo,
+    //   ubicacion: [req.body.lat, req.body.lng],
+    // };
 
 
-        Bicicleta.updateOne(bici, (err, updatedBici) => {
-            if(err){
-                console.log(err);
-            }else{
-                console.log(updatedBici);
-            }
-            res.status(200).json({
-            bicicleta: updatedBici
-            });
+    //     Bicicleta.updateOne(bici, (err, updatedBici) => {
+    //         if(err){
+    //             console.log(err);
+    //         }else{
+    //             console.log(updatedBici);
+    //         }
+    //         res.status(200).json({
+    //         bicicleta: updatedBici
+    //         });
+    //     });
+
+    let mBici = {code: req.body.code, color: req.body.color, modelo: req.body.modelo };
+    console.log('mBici', mBici);
+    Bicicleta.updateByCode(req.params.id, mBici, function(err, upBici) {
+        res.status(200).json({
+            bicicleta: upBici
         });
+    });
 };
 
 exports.bicicleta_delete = (req, res) => {
