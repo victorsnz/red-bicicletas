@@ -20,14 +20,14 @@ if(process.env.NODE_ENV === 'production'){
     mailConfig = sgTransport(options);
 
   } else {
-    const mailConfig = {
-      host: "smtp.ethereal.email",
-      port: 587,
-      auth: {
-        user: process.env.ehtereal_user,
-        pass: process.env.ethereal_pwd
-      },
-    };
+      mailConfig = {
+        host: "smtp.ethereal.email",
+        port: 587,
+        auth: {
+          user: process.env.ehtereal_user,
+          pass: process.env.ethereal_pwd
+        },
+      };
   }
 }
 
