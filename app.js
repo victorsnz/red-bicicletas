@@ -147,7 +147,12 @@ app.use('/API/bicicletas', validarUsuario, bicicletasAPIRouter);
 app.use('/API/reservas', reservasApiRouter);
 
 app.use('/privacy_policy', function (req, res) {
-  res.sendFile('oublic/policy_pivacy.html');
+  res.sendFile('public/policy_pivacy.html');
+  
+});
+
+app.use('/google50272866f223ac90', function (req, res) {
+  res.sendFile('public/google50272866f223ac90.html');
   
 });
 
