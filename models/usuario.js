@@ -40,7 +40,9 @@ var usuarioSchema = new Schema({
     verificado: {
         type: Boolean,
         default: false
-    }
+    },
+    googleId: String,
+    facebookId: String
 });
 
 usuarioSchema.plugin(uniqueValidator, {message:'El {PATH} ya existe con otro usuario.'});
@@ -132,4 +134,33 @@ usuarioSchema.static.FindOneOrCreateByGoogle = function findOneOrCreate(conditio
             }
         })
 };
+
+usuarioSchema.static.FindOneOrCreateByFacebook = function findOneOrCreate(condition, callback) {
+    const self = this;
+    console.log(condition);
+    self.findOne({
+        $or: [
+            {'facebookId': condition.id}, {'email':emails[0].value}
+        ]}, (err, result) => {
+            if(reslut) {
+                callback(err, result)
+            }else{
+                console.log('--------------- CONDITION ---------------');
+                console.log(condition);
+                let values = {};
+                values.facebookId = condition.id;
+                values.email = condition.emails[0].value;
+                values.nombre = condition.displayName || 'SIN NOMBRE';
+                values.verificado = true;
+                values.password = condition._json.etag;
+                console.log('--------------- VALUES ---------------');
+                console.log(values);
+                self.create(values, (err, result) => {
+                    if(err) {console.log(err);}
+                    return callback(err, result)
+                })
+            }
+        })
+};
+
 module.exports = mongoose.model('Usuario', usuarioSchema);
