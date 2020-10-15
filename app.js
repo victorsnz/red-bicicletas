@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const passport = require('./config/passport');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const jwt = require('jsonwebtoken');
 
 const Usuario = require('./models/usuario');
@@ -24,9 +25,22 @@ var bicicletasAPIRouter = require("./routes/API/bicicletas");
 var reservasApiRouter = require("./routes/API/reservas");
 var authAPIRouter = require('./routes/API/auth');
 
-const store = new session.MemoryStore;
+//const store = new session.MemoryStore;
+let store;
+if(process.env.NODE_ENV === 'development'){
+  store = new session.MemoryStore;
+}else{
+  store = new MongoDBStore({
+    uri: process.env.MONGO_URI,
+    collection: 'sessions'
+  });
+  store.on('error', function(error) {
+    assert.ifError(error);
+    assert.ok(false);
+  });
+}
 
-var app = express();
+let app = express();
 
 app.set('secretKey', 'jwt_pwd_!!223344');
 
@@ -38,6 +52,7 @@ app.use(session({
   secret: 'red_bicis_!!!***'
 }));
 var mongoose = require('mongoose');
+const { assert } = require('console');
 //const token  = require('morgan');
 
 // Si estoy en el ambiente de desarrollo, usar:
@@ -153,9 +168,19 @@ app.use('/privacy_policy', function (req, res) {
 
 app.use('/google50272866f223ac90', function (req, res) {
   res.sendFile('public/google50272866f223ac90.html');
-  
 });
 
+app.get('/auth/google',
+  passport.authenticate('google', { scope: [
+    'https:/www.googleapis.com/auth/plus.login',
+    'https:/www.googleapis.com/auth/plus.profile.emails.read'] }));
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/error' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
